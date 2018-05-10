@@ -25,13 +25,14 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-#include <iostream>
-#include <string>
 #include <stdexcept>
 #include <unistd.h>
+#include <string>
+#include <iostream>
 
+#include "mraa/initio.hpp"
 #include "buzzer.hpp"
+
 
 using namespace upm;
 using namespace std;
@@ -43,9 +44,25 @@ Buzzer::Buzzer(int pinNumber) : m_buzzer(buzzer_init(pinNumber))
                                  ": buzzer_init() failed");
 }
 
+Buzzer::Buzzer(std::string initStr)
+{
+    mraa::MraaIo mraaIo(initStr);
+    std::vector<std::string> upmTokens;
+
+    if (mraaIo.getLeftoverStr() != "") {
+      upmTokens = Buzzer::parse(mraaIo.getLeftoverStr());
+    }
+
+    for (std::string tok : upmTokens) {
+      if (tok.substr(0, 4) == "vol:") {
+        // setVolume(::atof(tok.substr(4));
+      } else {}
+    }
+}
+
 Buzzer::~Buzzer()
 {
-    buzzer_close(m_buzzer);
+    //buzzer_close(m_buzzer);
 }
 
 void Buzzer::setVolume(float vol)
