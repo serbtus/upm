@@ -29,7 +29,8 @@
 
 #include <string>
 #include <vector>
-#include <buzzer.h>
+#include <mraa/pwm.hpp>
+//#include <buzzer.h>
 
 namespace upm {
 
@@ -125,21 +126,12 @@ namespace upm {
             return m_name;
         }
 
-        /* TODO: Temporary location for this function*/
-        static std::vector<std::string>  parse(const std::string &initStr)
-        {
-          int numTokens = 0;
-          char **initStrTokens = upm_parse_init_str(initStr.c_str(), ",", &numTokens);
-          std::vector<std::string> tokens(initStrTokens, initStrTokens + numTokens);
-          upm_delete_parsed_str(initStrTokens, numTokens);
-
-          return tokens;
-        }
-
     protected:
         std::string m_name;
-        buzzer_context m_buzzer;
-
+        mraa::Pwm m_buzzer;
+        float volume;
+        bool initialized;
+        //buzzer_context m_buzzer;
     private:
         /* Disable implicit copy and assignment operators */
         Buzzer(const Buzzer&) = delete;
